@@ -16,11 +16,11 @@ from sklearn import svm
 import joblib
 import sklearn 
 app = Flask(__name__)
-ACCESS_TOKEN = 'EAATdr7bXNEABAJvvQU8WGOldMIi75BWdj8toKFZBMGaYxkP2AKH5jDlYm4oJSbYMcA8tojkgmrd9AHTZB6R7pECTYLN8OlsTU34IZBFZCTDckQc9Do7uqezDcvyAAMrW4dLNnvdKb7zjYXZCGczjZA3kY6ZCZB12ZCE2QIZBoG1Bpg9biL27VeN0qe'   #ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-VERIFY_TOKEN = 'simple-bot'   #VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
+ACCESS_TOKEN = 'your token'   
+VERIFY_TOKEN = 'verify token that your created'   
 bot = Bot (ACCESS_TOKEN)
 model_fast = fasttext.FastText.load_model('cc.th.100.bin')
-#loaded_model = pickle.load(open("thai_svm_100_joblib", 'rb'))
+
 
 loaded_model = joblib.load('thai_svm_100_joblib.sav')
 
@@ -47,7 +47,6 @@ def receive_message():
                     print("")
                     print(message['message'].get('text'))
                     print("")
-                    #print(get_vector(all_clean(message['message'].get('text'))))
                     clean = all_clean(message['message'].get('text'))
                     if len(clean) == 0 :
                         print("empty after clean")
@@ -62,29 +61,6 @@ def receive_message():
                         else :
                             send_message(recipient_id,"ขอให้เป็นวันที่ดี")
                             print(1)
-                    #print(all_clean(message['message'].get('text')))
-                    #print(type(message['message'].get('text')))
-                    #print("เป็นอะไร")
-                    #print(loaded_model.shape_fit_)
-                    #print(sklearn.__version__)
-                    #print(loaded_model.predict(get_vector("อยากตาย"))[0])
-                    #print(get_vector(all_clean(message['message'].get('text'))))
-                    #pre = loaded_model.predict(vec)
-                   
-                    #if pre == -1 :
-                    #    send_message(recipient_id,response_sent_text)
-                    #    print(-1)
-                       
-                   # else :
-                    #    send_message(recipient_id,"อืออออ")
-                     #   print(1)
-                    
-                    
-                    #loaded_model = pickle.load(open("thai_svm.sav", 'rb'))
-
-                    #test = loaded_model.predict(vec)[0]
-                    #print(test)
-                    #print(loaded_model.predict(get_vector(all_clean(message['message'].get('text'))).reshape(1,-1))[0])
                 #if user sends us a GIF, photo,video, or any other non-text item
                 if message['message'].get('attachments'):
                     response_sent_nontext = get_message()
@@ -124,10 +100,8 @@ def get_vector(a) :
         #vec_word_test = np.zeros(100)
         if j in model_fast.words :
             vec_word_test = vec_word_test + model_fast.get_word_vector(j)
-            # print("found : {}".format(j))
         else:
             vec_word_test = vec_word_test + np.zeros(100)
-            # print("Not found : {}".format(j))
     vec_allsent.append(np.divide(vec_word_test,len(word_token))) 
     return vec_allsent
 
@@ -164,12 +138,6 @@ def tweet_cleaning (tweet):
    tweet = ' '.join(re.sub('(#[ก-๙A-Za-z0-9]+)|(@[A-Za-z0-9]+)|(#)|(&amp;) ','',tweet).split())
   # #3 keep only alphabet
    tweet = ' '.join(re.sub('[^ก-๙A-Za-z]','', tweet).split())
-  # #4 to String 
-  #  tweet = tweet.replace(r'RT','')
-  #  #5 
-  #  tweet = tweet.strip()
-  #  #6 
-  #  tweet = tweet.lower()
    return tweet
 
 def all_clean(a) :
@@ -179,10 +147,7 @@ def all_clean(a) :
 
 
 
-#def get_predict(a) :
-#    loaded_model = pickle.load(open("thai_svm.sav", 'rb'))
-#    test = loaded_model.predict(np.zeros(300))
-#    return None
+
 
 if __name__ == "__main__":
     app.run()
